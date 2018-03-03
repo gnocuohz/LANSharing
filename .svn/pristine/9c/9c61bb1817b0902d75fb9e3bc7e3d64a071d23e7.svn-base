@@ -1,0 +1,33 @@
+package team.wwg.lansharing.task;
+
+import java.nio.channels.ClosedChannelException;
+import java.nio.channels.SelectionKey;
+import java.nio.channels.Selector;
+
+import team.wwg.lansharing.util.BaseRequest;
+
+public class UDPReceiverTask extends UDPChannelTask {
+	
+	public UDPReceiverTask(Selector selector) {
+		super(selector);
+		initUDPReceiverChannel();
+	}
+	
+	private void initUDPReceiverChannel(){
+		this.bindReceivePort(BaseRequest.UDP_PORT);
+		this.addWaitRegister();
+	}
+	
+	public void register(){
+		try {
+			this.key = this.datagramChannel.register(this.selector,SelectionKey.OP_READ);
+		} catch (ClosedChannelException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Override
+	public synchronized void run() {
+		
+	}
+}

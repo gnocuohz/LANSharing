@@ -1,0 +1,39 @@
+package team.wwg.lansharing.task;
+
+import java.nio.ByteBuffer;
+import java.nio.channels.SelectableChannel;
+import java.nio.channels.Selector;
+
+public class ChannelTask extends BaseTask{
+	
+	protected TaskManager taskManager = null;
+	protected ByteBuffer byteBuffer = null;
+	
+	
+	public ChannelTask(Selector selector) {
+		super(selector);
+		this.taskManager = TaskManager.getInstance();
+	}
+	
+	public void register(){
+//		try {
+//			selectableChannel.register(this.getSelector(), ops);
+//		} catch (ClosedChannelException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+	}
+	
+	protected void addWaitRegister(){
+		taskManager.addWaitTask(this);
+	}
+	
+	protected void allocateBuffer(int capacity){
+		byteBuffer = ByteBuffer.allocate(capacity);
+	}
+	
+	public SelectableChannel getChannel() {
+		return null;
+	}
+	
+}

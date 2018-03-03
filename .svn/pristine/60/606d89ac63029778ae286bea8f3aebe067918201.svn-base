@@ -1,0 +1,74 @@
+package team.wwg.lansharing.ui;
+
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.HashMap;
+
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+
+import team.wwg.lansharing.user.UserInfo;
+
+public class OnlineUserTable {
+	
+	private static HashMap<String, UserInfo> onlineUsersMap = null;
+	
+	private JTable tblOnlineUser = null;
+	private DefaultTableModel tblModle = null;
+	
+	public OnlineUserTable(){
+		onlineUsersMap = new HashMap<String, UserInfo>();
+		initTable();
+	}
+	
+	private void initTable(){
+		String[] columnNames = {"Ö÷»úÃû","êÇ³Æ","ip"};
+		tblModle = new DefaultTableModel();
+		
+		tblModle.setColumnIdentifiers(columnNames);
+		tblOnlineUser = new JTable(tblModle);
+		tblOnlineUser.setEnabled(false);
+		tblOnlineUser.addMouseListener(new MouseListener() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+	}
+	
+	public JTable getOnlineUserTable()
+	{
+		return this.tblOnlineUser;
+	}
+	
+	public int  getInfonum()
+	{
+		return tblModle.getRowCount();
+	}
+	
+}

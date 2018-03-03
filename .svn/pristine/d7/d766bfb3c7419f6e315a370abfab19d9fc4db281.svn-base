@@ -1,0 +1,36 @@
+package team.wwg.lansharing.user;
+
+public class UserInfo {
+	
+	private String strHostName = null;
+	private String strNickName = null;
+	private String strIPAddress = null;
+	
+	public UserInfo(String strHostName,String strNickName,String strIPAddress){
+		this.strHostName = strHostName;
+		this.strNickName = strNickName;
+		this.strIPAddress = strIPAddress.replaceAll("/", "");
+	}
+	
+	public String getStrHostName() {
+		return strHostName;
+	}
+	public void setStrHostName(String strHostName) {
+		this.strHostName = strHostName;
+	}
+	
+	public String getStrNickName() {
+		return strNickName;
+	}
+	public void setStrNickName(String strNickName) {
+		this.strNickName = strNickName;
+	}
+	
+	public String getStrIPAddress() {
+		return strIPAddress;
+	}
+	public void setStrIPAddress(String strIPAddress) {
+		strIPAddress = strIPAddress.replaceAll("/", "");
+		this.strIPAddress = strIPAddress;
+	}
+}

@@ -1,0 +1,44 @@
+package team.wwg.lansharing.task;
+
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.SocketException;
+import java.nio.channels.DatagramChannel;
+import java.nio.channels.SelectableChannel;
+import java.nio.channels.Selector;
+
+
+
+public class UDPChannelTask extends ChannelTask {
+	
+	protected DatagramChannel datagramChannel = null;
+
+	
+	public UDPChannelTask(Selector selector) {
+		super(selector);
+		initChannel();
+	}
+	
+	private void initChannel(){
+		try {
+			datagramChannel = DatagramChannel.open();
+			datagramChannel.configureBlocking(false);	
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	protected void bindReceivePort(int port){
+		try {
+			datagramChannel.socket().bind(new InetSocketAddress(port));
+		} catch (SocketException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public SelectableChannel getChannel(){
+		return datagramChannel;	
+	}
+}

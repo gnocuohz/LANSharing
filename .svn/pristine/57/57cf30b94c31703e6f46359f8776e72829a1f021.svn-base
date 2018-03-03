@@ -1,0 +1,43 @@
+package team.wwg.lansharing.msg;
+
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
+
+public class MessageManager {
+
+	private static MessageManager messageManager = null;
+	
+	private Queue<WaitingSendMsg> waitSendMsgQueue = null;
+	
+	private MessageManager() {
+		waitSendMsgQueue = new ConcurrentLinkedQueue<WaitingSendMsg>();
+	}
+	
+	public synchronized static MessageManager getInstance() {
+		if (null == messageManager) {
+			messageManager = new MessageManager();
+		}
+		return messageManager;
+	}
+	
+	public Queue<WaitingSendMsg> getWaitSendMsgQueue(){
+		return waitSendMsgQueue;
+	}
+	
+	public void addWaitSendMsg(WaitingSendMsg msg) {
+		synchronized (waitSendMsgQueue) {
+			if (waitSendMsgQueue.contains(msg)) {
+				// “‘±ªÃÌº”
+				return;
+			}
+			waitSendMsgQueue.add(msg);
+		}
+	}
+	public void removeWaitSendMsg(WaitingSendMsg msg) {
+		synchronized (waitSendMsgQueue) {
+			if (waitSendMsgQueue.contains(msg)) {
+				waitSendMsgQueue.remove(msg);
+			}
+		}
+	}
+}

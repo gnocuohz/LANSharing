@@ -1,0 +1,129 @@
+package team.wwg.lansharing.task;
+
+import java.nio.channels.SelectableChannel;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.concurrent.ExecutorService;
+
+import team.wwg.lansharing.util.CreateExcutorServiceUtil;
+
+public class TaskManager {
+	
+	private Set<ChannelTask> waitRegisterTasks = null;
+	
+	private HashMap<SelectableChannel, ChannelTask> completeRegisterTasks = null;
+	
+	private static TaskManager taskManager = null;
+	
+	private ExecutorService executor = null; 
+	
+	private TaskManager() {
+		waitRegisterTasks = new HashSet<ChannelTask>();
+		completeRegisterTasks = new HashMap<SelectableChannel, ChannelTask>();
+		
+		executor = CreateExcutorServiceUtil.createExecutorService();
+	}
+
+	public synchronized static TaskManager getInstance() {
+		if (null == taskManager) {
+			taskManager = new TaskManager();
+		}
+		return taskManager;
+	}
+	
+
+	
+
+	public synchronized void addWaitTask(ChannelTask Task) {
+		synchronized (waitRegisterTasks) {
+			if (waitRegisterTasks.contains(Task)) {
+				// 以被添加
+				return;
+			}
+			waitRegisterTasks.add(Task);
+		}
+	}
+	
+	public synchronized void removeWaitingTask(BaseTask Task) {
+		synchronized (waitRegisterTasks) {
+			if (waitRegisterTasks.contains(Task)) {
+				waitRegisterTasks.remove(Task);
+			}
+		}
+	}
+	
+	/**
+	 * 添加serverTask或者ClientTask
+	 * 
+	 * @param key
+	 * @param Task
+	 */
+	public synchronized void addCompleteTask(SelectableChannel channel, ChannelTask Task) {
+		synchronized (completeRegisterTasks) {
+			if (completeRegisterTasks.containsKey(channel)) {
+				// 以被添加
+				return;
+			}
+			completeRegisterTasks.put(channel, Task);
+		}
+
+	}
+
+	/**
+	 * 根据key移除相应的Task任务
+	 * 
+	 * @param key
+	 */
+	public synchronized void removeCompleteTask(SelectableChannel channel) {
+		synchronized (completeRegisterTasks) {
+			if (completeRegisterTasks.containsKey(channel)) {
+				completeRegisterTasks.remove(channel);
+			}
+		}
+
+	}
+
+	/**
+	 * 根据key查找并返回相应的任务
+	 * 
+	 * @param key
+	 * @return
+	 */
+	public synchronized BaseTask getCompleteTask(SelectableChannel channel) {
+		synchronized (completeRegisterTasks) {
+			if (completeRegisterTasks.containsKey(channel)) {
+				return completeRegisterTasks.get(channel);
+			}
+		}
+		return null;
+
+	}
+	
+	public synchronized void register() {
+		synchronized (waitRegisterTasks) {
+			if (waitRegisterTasks.isEmpty())
+				return;
+
+			Iterator<ChannelTask> iterator = waitRegisterTasks.iterator();
+			while (iterator.hasNext()) {
+				ChannelTask task = iterator.next();
+				task.register();
+				iterator.remove();
+				this.addCompleteTask(task.getChannel(), task);
+			}
+		}
+	}
+
+	
+	public synchronized ExecutorService getExecutor()
+	{
+		synchronized (executor) {
+			if (executor!=null){
+				return executor;	
+			}
+		}
+		return null;
+	}
+}

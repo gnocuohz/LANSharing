@@ -1,0 +1,22 @@
+package team.wwg.lansharing.service;
+
+import java.nio.channels.Selector;
+
+import team.wwg.lansharing.task.TaskManager;
+
+public class ServerControl implements Runnable{
+	
+	private Selector selector = null;
+	private TaskManager taskManager = null;
+	public ServerControl() {
+		// TODO Auto-generated constructor stub
+	}
+
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		while(true){
+			
+		}
+	}
+}

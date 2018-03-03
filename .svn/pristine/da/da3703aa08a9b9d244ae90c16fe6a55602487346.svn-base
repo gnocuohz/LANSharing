@@ -1,0 +1,56 @@
+package team.wwg.lansharing.task;
+
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.StandardProtocolFamily;
+import java.net.StandardSocketOptions;
+import java.net.UnknownHostException;
+import java.nio.channels.ClosedChannelException;
+import java.nio.channels.DatagramChannel;
+import java.nio.channels.SelectionKey;
+import java.nio.channels.Selector;
+
+import team.wwg.lansharing.util.BaseRequest;
+
+
+public class MulticastReceiver extends UDPChannelTask {
+	private final static String ALL_SYSTEMS_MCAST_NET = "224.0.0.2";
+	
+	public MulticastReceiver(Selector selector) {
+		super(selector);
+		initMulticastChannel();
+	}
+
+	private void initMulticastChannel() {
+		InetAddress localAddress;
+		try {
+			localAddress = InetAddress.getLocalHost();
+			NetworkInterface ni = NetworkInterface.getByInetAddress(localAddress);
+			this.datagramChannel = DatagramChannel.open(StandardProtocolFamily.INET)
+					.setOption(StandardSocketOptions.SO_REUSEADDR, true)
+					.setOption(StandardSocketOptions.IP_MULTICAST_IF, ni);
+			bindReceivePort(BaseRequest.MULTICAST_PORT);
+			InetAddress group = InetAddress.getByName(ALL_SYSTEMS_MCAST_NET);
+			datagramChannel.join(group, ni);
+			addWaitRegister();
+		} catch (UnknownHostException e1) {
+			e1.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}	
+	}
+	
+	public void register(){
+		try {
+			this.key = this.datagramChannel.register(selector,SelectionKey.OP_READ);
+		} catch (ClosedChannelException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Override
+	public synchronized void run() {
+		
+	}
+}

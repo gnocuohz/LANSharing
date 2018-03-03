@@ -1,0 +1,165 @@
+package team.wwg.lansharing.ui;
+
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+
+public class MainWnd {
+	
+	private JFrame mainFrame =new JFrame();
+	public static JTextField nickName = new JTextField("飞鸽传书");
+	private JLabel numLabel = null;
+	private int windowWidth = 300;      
+	private int windowHeight = 480;
+	private JButton btnRename = null;
+	private OnlineUserTable onlineUserTable = null;
+	
+	public MainWnd()
+	{
+		init();
+	}
+
+
+	private void init() {
+		mainFrame.setTitle("LANSharing");
+		mainFrame.addWindowListener(new WindowListener() {
+			
+			@Override
+			public void windowOpened(WindowEvent e) {
+				
+			}
+			
+			@Override
+			public void windowIconified(WindowEvent e) {
+				
+			}
+			
+			@Override
+			public void windowDeiconified(WindowEvent e) {
+				
+			}
+			
+			@Override
+			public void windowDeactivated(WindowEvent e) {
+				
+			}
+			
+			@Override
+			public void windowClosing(WindowEvent e) {
+
+			}
+			
+			@Override
+			public void windowClosed(WindowEvent e) {
+				
+			}
+			
+			@Override
+			public void windowActivated(WindowEvent e) {
+				
+			}
+		});
+		
+		initStartPos();
+		initArea();
+		nickName.setEditable(false);
+		mainFrame.setSize(windowWidth, windowHeight);
+		mainFrame.setVisible(true);
+	}
+
+	//初始化界面位置
+	private void initStartPos()
+	{
+		int  hight=(int)Toolkit.getDefaultToolkit().getScreenSize().getHeight();
+		int  width=(int)Toolkit.getDefaultToolkit().getScreenSize().getWidth();
+		mainFrame.setLocation((width-windowWidth)/2, (hight-windowHeight)/2);
+	}
+	//初始化界面
+	private void initArea() {
+		JPanel mainArea = new JPanel(new BorderLayout());
+		
+		initButton(mainArea);
+		initSelfInfoPanel(mainArea);
+		initScrollPane(mainArea);
+		
+		mainFrame.add(mainArea);
+	}
+	
+	private void initSelfInfoPanel(JPanel mainArea){
+		JLabel iconLabel = new JLabel();
+		Icon icon=new ImageIcon("./res/person.png"); 
+		iconLabel.setIcon(icon);
+		JLabel label = new JLabel("昵称：");
+		JLabel peolabel = new JLabel("   在线人数：");
+		numLabel = new JLabel("0");
+		JPanel selfInfoPanel=new JPanel(new FlowLayout());
+		FlowLayout flowlayout = new FlowLayout();
+		//flowlayout.setAlignment(flowlayout.LEADING);
+		selfInfoPanel.setLayout(flowlayout);
+		
+		selfInfoPanel.add(iconLabel);
+		selfInfoPanel.add(label);
+		selfInfoPanel.add(nickName);
+		selfInfoPanel.add(btnRename);
+		selfInfoPanel.add(peolabel);
+		selfInfoPanel.add(numLabel);
+		mainArea.add(selfInfoPanel,BorderLayout.NORTH);
+	}
+	
+	private void initScrollPane(JPanel mainArea){
+		JScrollPane scrollpane = new JScrollPane();
+		onlineUserTable = new OnlineUserTable();
+		scrollpane.setViewportView(onlineUserTable.getOnlineUserTable());
+		mainArea.add(scrollpane,BorderLayout.CENTER);
+	}
+	
+	
+	private void initButton(JPanel mainArea){
+		JButton btnRefresh = new JButton("刷新");
+		btnRefresh.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				/**
+				 * 
+				 * 
+				 * 刷新方法
+				 * 
+				 * 
+				 */
+			}
+		});
+		
+		btnRename = new JButton();
+		btnRename.setPreferredSize(new Dimension(20, 20));
+		btnRename.setIcon(new ImageIcon("./res/rename.png"));
+		btnRename.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				/**
+				 * 
+				 * 
+				 * 更改昵称方法
+				 * 
+				 * 
+				 */
+			}
+		});
+		
+		mainArea.add(btnRefresh,BorderLayout.SOUTH);
+	}
+}
